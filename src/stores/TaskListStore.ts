@@ -1,6 +1,6 @@
 import { ref } from 'vue'
 import { defineStore } from 'pinia'
-import { Task, RootTaskNode } from '@/models/Task'
+import { RootTaskNode } from '@/models/Task'
 
 export const useTaskListStore = defineStore('taskList', () => {
   const taskList = ref<RootTaskNode>(new RootTaskNode(
