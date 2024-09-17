@@ -1,0 +1,1 @@
+export const taskListRootGroupName: string = 'ROOT_TASK_LIST_GROUP';
