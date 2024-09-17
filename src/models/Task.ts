@@ -52,6 +52,10 @@ export class Task extends TaskNode {
     return new Task(uuid(), name, false, new Date(), [], parent);
   }
 
+  setName(name: string): void {
+    this.name = name;
+  }
+
   canBeFinished(): boolean {
     return this.children.every(child => (child as Task).finished);
   }

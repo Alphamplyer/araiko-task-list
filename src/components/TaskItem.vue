@@ -1,14 +1,32 @@
 <script setup lang="ts">
 import { Task } from '@/models/Task'
-import { defineProps } from 'vue'
+import { defineProps, ref } from 'vue'
 
 const { task } = defineProps<{ task: Task }>()
+
+const editName = ref(task.name)
+const isEditing = ref(false)
+
+function saveEdit() {
+  task.setName(editName.value)
+  isEditing.value = false
+}
 </script>
 
 <template>
   <n-card class="task-item">
     <n-space vertical>
-      <n-text>{{ task.name }} - {{ task.id }}</n-text>
+      <n-text v-if="isEditing">
+        <n-input v-model:value="editName" />
+        <n-space class="edit-buttons" justify="end">
+          <n-button type="primary" @click="saveEdit">Save</n-button>
+          <n-button @click="isEditing = false">Cancel</n-button>
+        </n-space>
+      </n-text>
+      <n-text v-else>
+        {{ task.name }}
+        <n-button @click="isEditing = true">Edit</n-button>
+      </n-text>
       <n-text>Created at: <n-time :time="task.createdAt" /></n-text>
       <n-text v-if="task.finishedAt">Finished at: <n-time :time="task.finishedAt" /></n-text>
       <n-space justify="end">
@@ -46,5 +64,9 @@ const { task } = defineProps<{ task: Task }>()
 
 .sub-task-item {
   margin-left: 1rem;
+}
+
+.edit-buttons {
+  margin-top: 0.5rem;
 }
 </style>
