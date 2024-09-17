@@ -12,7 +12,9 @@ const { task } = defineProps<{ task: Task }>()
       <n-text>Created at: <n-time :time="task.createdAt" /></n-text>
       <n-text v-if="task.finishedAt">Finished at: <n-time :time="task.finishedAt" /></n-text>
       <n-space justify="end">
+        <n-button @click="task.addBefore(Task.create('New Task'))">Add before</n-button>
         <n-button @click="task.addChild(Task.create('New Task'))">Add children</n-button>
+        <n-button @click="task.addAfter(Task.create('New Task'))">Add after</n-button>
         <n-button
           v-if="!task.finished"
           type="primary"

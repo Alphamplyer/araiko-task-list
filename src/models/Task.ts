@@ -86,6 +86,41 @@ export class Task extends TaskNode {
     }
   }
 
+  addBefore(newTask: Task): void {
+    console.log('addBefore', this);
+    if (!this.parent) {
+      return;
+    }
+
+    const index = this.parent.children.indexOf(this);
+    if (index === -1) {
+      console.error('Task not found in parent children');
+      return;
+    }
+    newTask.parent = this.parent;
+    this.parent.children.splice(index, 0, newTask);
+    console.log('index', index);
+    console.log('added before', this.parent.children);
+  }
+
+  addAfter(newTask: Task): void {
+    if (!this.parent) {
+      return;
+    }
+
+    const index = this.parent.children.indexOf(this);
+    if (index === -1) {
+      return;
+    }
+
+    if (index === this.parent.children.length - 1) {
+      this.parent.addChild(newTask);
+    } else {
+      newTask.parent = this.parent;
+      this.parent.children.splice(index + 1, 0, newTask);
+    }
+  }
+
   delete(): void {
     if (!this.parent) {
       return;
