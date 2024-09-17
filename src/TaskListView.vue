@@ -12,10 +12,36 @@ function addTask() {
   taskListStore.taskList.addChild(Task.create(taskName.value))
   taskName.value = ''
 }
+
+function uploadJsonTaskList() {
+  const input = document.createElement('input')
+  input.type = 'file'
+  input.accept = '.json'
+  input.onchange = async (e) => {
+    const file = (e.target as HTMLInputElement).files?.[0]
+    if (!file) return
+    const text = await file.text()
+    //taskListStore.importFromJson(text)
+  }
+  input.click()
+}
+
+function downloadJsonTaskList() {
+  const downloadElement = document.createElement('a')
+  const json = taskListStore.exportToJson()
+  downloadElement.setAttribute('href', 'data:text/json;charset=utf-8,' + encodeURIComponent(json))
+  downloadElement.setAttribute('download', 'tasklist_backup.json')
+  downloadElement.click()
+  downloadElement.remove()
+}
 </script>
 
 <template>
-  <n-card title="Add a new task">
+  <n-space>
+    <n-button @click="uploadJsonTaskList" disabled>Import Task List</n-button>
+    <n-button @click="downloadJsonTaskList">Export Task List</n-button>
+  </n-space>
+  <n-card class="add-task-card" title="Add a new task">
     <n-space vertical>
       What do you want to do?
       <n-input v-model:value="taskName" type="text" placeholder="Basic Input" />
@@ -30,4 +56,8 @@ function addTask() {
   <task-list :tasks="taskListStore.taskList.children" />
 </template>
 
-<style scoped></style>
+<style scoped>
+.add-task-card {
+  margin-top: 1rem;
+}
+</style>

@@ -23,12 +23,41 @@ export class TaskNode {
   getChildren(): TaskNode[] {
     return this.children;
   }
+
+  static fromJSON(json: any): TaskNode {
+    const taskNode = new TaskNode(json.parent ? TaskNode.fromJSON(json.parent) : undefined, json.children.map(TaskNode.fromJSON));
+    return taskNode;
+  }
+
+  toJSON(): any {
+    return {
+      parent: this.parent ? this.parent.toJSON() : undefined,
+      children: this.children.map(c => c.toJSON())
+    };
+  }
 }
 
 export class RootTaskNode extends TaskNode {
   constructor(children: Task[] = []) {
     super(undefined, children);
     children.forEach(c => c.parent = this);
+  }
+
+  addChild(newTask: Task): RootTaskNode {
+    super.addChild(newTask);
+    newTask.parent = this;
+    return this;
+  }
+
+  // static fromJSON(json: any): RootTaskNode {
+  //   const rootTaskNode = new RootTaskNode(json.children.map((jsonChild) => Task.fromJSON(jsonChild, rootTaskNode)));
+  //   return rootTaskNode;
+  // }
+
+  toJSON(): any {
+    return {
+      children: (this.children as Task[]).map(childTask => childTask.toJSON())
+    };
   }
 }
 
@@ -39,7 +68,7 @@ export class Task extends TaskNode {
   createdAt: Date;
   finishedAt?: Date;
 
-  private constructor(id: string, name: string, finished: boolean, createdAt: Date, children: Task[] = [], parent?: Task, finishedAt?: Date) {
+  private constructor(id: string, name: string, finished: boolean, createdAt: Date, children: Task[] = [], parent?: TaskNode, finishedAt?: Date) {
     super(parent, children);
     this.id = id;
     this.name = name;
@@ -156,5 +185,29 @@ export class Task extends TaskNode {
         this.parent.markAsFinished();
       }
     }
+  }
+
+  // static fromJSON(json: any): Task {
+  //   const task = new Task(
+  //     json.id, 
+  //     json.name, 
+  //     json.finished, 
+  //     new Date(json.createdAt), 
+  //     json.children.map(Task.fromJSON),
+  //     undefined,
+  //     json.finishedAt ? new Date(json.finishedAt) : undefined
+  //   );
+  //   return task;
+  // }
+
+  toJSON(): any {
+    return {
+      id: this.id,
+      name: this.name,
+      finished: this.finished,
+      createdAt: this.createdAt.toISOString(),
+      finishedAt: this.finishedAt ? this.finishedAt.toISOString() : undefined,
+      children: (this.children as Task[]).map(childTask => childTask.toJSON())
+    };
   }
 }
