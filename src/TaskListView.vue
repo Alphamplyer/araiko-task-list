@@ -21,7 +21,7 @@ function uploadJsonTaskList() {
     const file = (e.target as HTMLInputElement).files?.[0]
     if (!file) return
     const text = await file.text()
-    //taskListStore.importFromJson(text)
+    taskListStore.importFromJson(text)
   }
   input.click()
 }
@@ -38,7 +38,7 @@ function downloadJsonTaskList() {
 
 <template>
   <n-space>
-    <n-button @click="uploadJsonTaskList" disabled>Import Task List</n-button>
+    <n-button @click="uploadJsonTaskList">Import Task List</n-button>
     <n-button @click="downloadJsonTaskList">Export Task List</n-button>
   </n-space>
   <n-card class="add-task-card" title="Add a new task">

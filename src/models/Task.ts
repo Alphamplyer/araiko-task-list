@@ -43,16 +43,11 @@ export class RootTaskNode extends TaskNode {
     children.forEach(c => c.parent = this);
   }
 
-  addChild(newTask: Task): RootTaskNode {
-    super.addChild(newTask);
-    newTask.parent = this;
-    return this;
+  static fromJSON(json: any): RootTaskNode {
+    const rootTaskNode = new RootTaskNode();
+    json.children.forEach((jsonChild: any) => rootTaskNode.addChild(Task.fromJSON(jsonChild)));
+    return rootTaskNode;
   }
-
-  // static fromJSON(json: any): RootTaskNode {
-  //   const rootTaskNode = new RootTaskNode(json.children.map((jsonChild) => Task.fromJSON(jsonChild, rootTaskNode)));
-  //   return rootTaskNode;
-  // }
 
   toJSON(): any {
     return {
@@ -187,18 +182,20 @@ export class Task extends TaskNode {
     }
   }
 
-  // static fromJSON(json: any): Task {
-  //   const task = new Task(
-  //     json.id, 
-  //     json.name, 
-  //     json.finished, 
-  //     new Date(json.createdAt), 
-  //     json.children.map(Task.fromJSON),
-  //     undefined,
-  //     json.finishedAt ? new Date(json.finishedAt) : undefined
-  //   );
-  //   return task;
-  // }
+  static fromJSON(json: any): Task {
+    const task = new Task(
+      json.id, 
+      json.name, 
+      json.finished, 
+      new Date(json.createdAt),
+      [],
+      undefined,
+      json.finishedAt ? new Date(json.finishedAt) : undefined
+    );
+
+    json.children.forEach((jsonChild: any) => task.addChild(Task.fromJSON(jsonChild)));
+    return task;
+  }
 
   toJSON(): any {
     return {
