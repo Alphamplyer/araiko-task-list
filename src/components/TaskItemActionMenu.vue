@@ -40,7 +40,7 @@ function handleClick(key: string) {
       <div class="menu-action" @click="handleClick('add-children')">Add children</div>
       <div class="menu-action" @click="handleClick('add-after')">Add after</div>
       <div
-        :class="`menu-action ${task.finished ? 'menu-action-disabled' : ''}`"
+        :class="`menu-action ${task.canBeFinished() ? '' : 'menu-action-disabled'}`"
         v-if="!task.finished"
         type="primary"
         @click="handleClick('finish')"
