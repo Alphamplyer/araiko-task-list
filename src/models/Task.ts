@@ -60,34 +60,53 @@ export class Task extends TaskNode {
     return this.children.every(child => (child as Task).finished);
   }
 
-  markParentAsFinishedIfAllChildTasksAreFinished(parent?: TaskNode): void {
-    if (!parent || !(parent instanceof Task)) {
-      return;
-    }
-
-    if (parent.canBeFinished()) {
-      parent.finished = true;
-      parent.finishedAt = new Date();
-      parent.markParentAsFinishedIfAllChildTasksAreFinished(parent.parent);
-    }
-  }
-
   markAsFinished(): void {
     if (this.canBeFinished()) {
       this.finished = true;
       this.finishedAt = new Date();
     }
 
-    this.markParentAsFinishedIfAllChildTasksAreFinished(this.parent);
+    if (!this.parent || !(this.parent instanceof Task)) {
+      return;
+    }
+    
+    this.parent.markAsFinished();
+  }
+
+  markParentsAsUnfinished(): void {
+    if (!this.parent || !(this.parent instanceof Task)) {
+      return;
+    }
+
+    this.parent.finished = false;
+    this.parent.finishedAt = undefined;
+    this.parent.markParentsAsUnfinished();
+  }
+
+  markChildrenAsUnfinished(): void {
+    if (this.children.length > 0) {
+      this.children.forEach(child => {
+        (child as Task).finished = false;
+        (child as Task).finishedAt = undefined;
+        (child as Task).markChildrenAsUnfinished();
+      });
+    }
   }
 
   markAsUnfinished(): void {
     this.finished = false;
     this.finishedAt = undefined;
 
-    if (this.children.length > 0) {
-      this.children.forEach(child => (child as Task).markAsUnfinished());
-    }
+    this.markChildrenAsUnfinished();
+    this.markParentsAsUnfinished();
+  }
+
+  addChild(newTask: TaskNode): Task {
+    super.addChild(newTask);
+    this.finished = false;
+    this.finishedAt = undefined;
+    this.markParentsAsUnfinished();
+    return this;
   }
 
   addBefore(newTask: Task): void {
@@ -131,5 +150,11 @@ export class Task extends TaskNode {
     }
 
     this.parent.removeChild(this);
+
+    if (this.parent instanceof Task && this.parent.children.length > 0) {
+      if (this.parent.canBeFinished()) {
+        this.parent.markAsFinished();
+      }
+    }
   }
 }
