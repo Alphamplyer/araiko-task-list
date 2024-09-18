@@ -198,11 +198,13 @@ export class Task extends TaskNode {
    * @param newTask - The `TaskNode` to add
    * @returns this `Task`
    */
-  addChild(newTask: TaskNode): Task {
+  addChild(newTask: TaskNode, markAsUnfinished:boolean = true): Task {
     super.addChild(newTask);
-    this.finished = false;
-    this.finishedAt = undefined;
-    this.markParentsAsUnfinished();
+    if (markAsUnfinished) {
+      this.finished = false;
+      this.finishedAt = undefined;
+      this.markParentsAsUnfinished();
+    }
     return this;
   }
 
@@ -286,7 +288,7 @@ export class Task extends TaskNode {
       json.finishedAt ? new Date(json.finishedAt) : undefined
     );
 
-    json.children.forEach((jsonChild: any) => task.addChild(Task.fromJSON(jsonChild)));
+    json.children.forEach((jsonChild: any) => task.addChild(Task.fromJSON(jsonChild), false));
     return task;
   }
 
