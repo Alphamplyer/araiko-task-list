@@ -19,11 +19,19 @@ export const useTaskListStore = defineStore('taskList', () => {
     ]
   ));
 
-  function exportToJson(): any {
+  /**
+   * Convert the `taskList` value into a stringified json
+   * @returns the stringify `taskList`
+   */
+  function exportToJson(): string {
     return JSON.stringify(taskList.value.toJSON());
   }
 
-  function importFromJson(json: any) {
+  /**
+   * Replace the value of `taskList` by the given one
+   * @param json the new `taskList` value
+   */
+  function importFromJson(json: string) {
     taskList.value = RootTaskNode.fromJSON(JSON.parse(json));
   }
 
