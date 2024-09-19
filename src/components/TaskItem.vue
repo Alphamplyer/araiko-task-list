@@ -4,6 +4,7 @@ import TaskItemActionMenu from './TaskItemActionMenu.vue'
 import ACard from './ACard.vue'
 import AButton from './AButton.vue'
 import ArrowDownIcon from './icons/ArrowDownIcon.vue'
+import EditIcon from './icons/EditIcon.vue'
 import ATime from './ATime.vue'
 import AProgressBar from './AProgressBar.vue'
 import { computed, defineProps, ref } from 'vue'
@@ -32,13 +33,15 @@ const hasChildren = computed(() => task.children.length > 0)
               class="form-text w-full h-10 placeholder:text-gray-400 bg-zinc-50 text-gray-700 text-sm border border-zinc-400 rounded px-3 py-2 transition duration-300 ease focus:outline-none focus:bg-white focus:border-zinc-600 hover:border-zinc-600 shadow-sm focus:shadow-md"
               type="text"
               v-model="editName"
+              @keyup.enter="saveEdit"
             />
             <a-button class="ml-2" type="primary" @click="saveEdit">Save</a-button>
             <a-button class="ml-2" @click="isEditing = false">Cancel</a-button>
           </div>
           <div v-else class="flex">
-            <p class="flex-grow text-wrap break-words">{{ task.name }}</p>
-            <a-button class="ml-2" @click="isEditing = true">Edit</a-button>
+            <div class="flex-grow">
+              <p class="text-wrap break-words transition duration-250 ease hover:text-zinc-500" @click="isEditing = true">{{ task.name }}<edit-icon class="inline-block h-4 ml-1 align-baseline" /></p>
+            </div>
             <task-item-action-menu class="ml-2" :task="task" />
           </div>
         </div>
