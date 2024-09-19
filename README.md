@@ -1,5 +1,7 @@
 # araiko-task-list
 
+![image](https://github.com/user-attachments/assets/997e391d-6abb-488e-b011-06cf7b871b27)
+
 This is a simmple tasklist with the following features :
 
 - [x] import and export task list from json files
