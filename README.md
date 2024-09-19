@@ -1,6 +1,7 @@
 # araiko-task-list
 
-![image](https://github.com/user-attachments/assets/997e391d-6abb-488e-b011-06cf7b871b27)
+![image](https://github.com/user-attachments/assets/ec216a56-ee1e-4f9b-9499-f24774f376de)
+
 
 This is a simmple tasklist with the following features :
 
