@@ -31,9 +31,16 @@ export const useTaskListStore = defineStore('taskList', () => {
    * Replace the value of `taskList` by the given one
    * @param json the new `taskList` value
    */
-  function importFromJson(json: string) {
+  function importFromJson(json: string): void {
     taskList.value = RootTaskNode.fromJSON(JSON.parse(json));
   }
 
-  return { taskList, exportToJson, importFromJson }
+  /**
+   * Clear the task list
+   */
+  function clear(): void {
+    taskList.value = new RootTaskNode()
+  }
+
+  return { taskList, exportToJson, importFromJson, clear }
 })
