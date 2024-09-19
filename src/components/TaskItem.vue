@@ -34,7 +34,7 @@ const hasChildren = computed(() => task.children.length > 0)
               v-model="editName"
             />
             <a-button class="ml-2" type="primary" @click="saveEdit">Save</a-button>
-            <a-button @click="isEditing = false">Cancel</a-button>
+            <a-button class="ml-2" @click="isEditing = false">Cancel</a-button>
           </div>
           <div v-else class="flex">
             <p class="flex-grow text-wrap break-words">{{ task.name }}</p>
