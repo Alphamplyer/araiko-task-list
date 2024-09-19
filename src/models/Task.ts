@@ -273,6 +273,34 @@ export class Task extends TaskNode {
   }
 
   /**
+   * Get the number of subtasks that this `Task` has
+   * @return the number of subtasks
+   */
+  getSubTaskCount(): number {
+    let count: number = 0;
+    for (const task of this.children as Task[]) {
+      count++;
+      count += task.getSubTaskCount()
+    }
+    return count;
+  }
+
+  /**
+   * Get the number of finished subtasks that this `Task` has
+   * @return the number of finished subtasks
+   */
+  getFinishedSubTaskCount(): number {
+    let count: number = 0;
+    for (const task of this.children as Task[]) {
+      if (task.finished) {
+        count++;
+      }
+      count += task.getFinishedSubTaskCount()
+    }
+    return count;
+  }
+
+  /**
    * Parse de json into a `Task` object
    * @param json - the parsed json that represent a `Task`
    * @returns the `Task` created from the parsed json

@@ -1,4 +1,4 @@
-<script setup lang="tsx">
+<script setup lang="ts">
 import { defineProps } from 'vue'
 type ButtonType = 'outline' | 'primary' | 'text'
 const { type = 'outline' } = defineProps<{

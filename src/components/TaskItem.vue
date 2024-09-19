@@ -3,8 +3,10 @@ import { Task } from '@/models/Task'
 import TaskItemActionMenu from './TaskItemActionMenu.vue'
 import ACard from './ACard.vue'
 import AButton from './AButton.vue'
+import ArrowDownIcon from './icons/ArrowDownIcon.vue'
 import ATime from './ATime.vue'
-import { defineProps, ref } from 'vue'
+import AProgressBar from './AProgressBar.vue'
+import { computed, defineProps, ref } from 'vue'
 
 const { task } = defineProps<{ task: Task }>()
 
@@ -15,11 +17,14 @@ function saveEdit() {
   task.setName(editName.value)
   isEditing.value = false
 }
+
+const collapseSubTask = ref(true)
+const hasChildren = computed(() => task.children.length > 0)
 </script>
 
 <template>
   <div>
-    <a-card :class="`mb-2 ${task.finished ? 'border-green-600 bg-green-100' : ''}`">
+    <a-card :class="`mb-2 ${task.finished ? '!border-green-600 !bg-green-100' : ''}`">
       <template #title>
         <div>
           <div v-if="isEditing" class="flex">
@@ -41,10 +46,21 @@ function saveEdit() {
       <template #content>
         <p>Created: <a-time :time="task.createdAt" /></p>
         <p v-if="task.finishedAt">Finished: <a-time :time="task.finishedAt" /></p>
+        <div v-if="hasChildren" class="flex gap-2 h-4 items-center mt-2">
+          <arrow-down-icon
+            @click="collapseSubTask = !collapseSubTask"
+            :class="`block w-10 h-10 ${collapseSubTask ? '-rotate-90' : ''}`"
+          />
+          <a-progress-bar
+            class="grow"
+            :maxValue="task.getSubTaskCount()"
+            :value="task.getFinishedSubTaskCount()"
+          />
+        </div>
       </template>
     </a-card>
-    <div>
-      <div v-if="task.children.length > 0" class="pl-4 border-l-2 border-zinc-300">
+    <div v-if="!collapseSubTask">
+      <div v-if="hasChildren" class="pl-4 border-l-2 border-zinc-300">
         <slot></slot>
       </div>
     </div>
