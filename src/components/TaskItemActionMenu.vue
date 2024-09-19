@@ -1,6 +1,9 @@
 <script setup lang="ts">
 import { Task } from '@/models/Task'
 import { defineProps, ref } from 'vue'
+import { Menu, MenuButton, MenuItems, MenuItem } from '@headlessui/vue'
+import AButton from './AButton.vue'
+import ArrowDownIcon from './icons/ArrowDownIcon.vue'
 
 const { task } = defineProps<{ task: Task }>()
 
@@ -31,55 +34,66 @@ function handleClick(key: string) {
 </script>
 
 <template>
-  <n-popover class="actions-menu" trigger="manual" :show="showMenuOpen">
-    <template #trigger>
-      <n-button @click="showMenuOpen = !showMenuOpen">Actions</n-button>
-    </template>
-    <n-space vertical>
-      <div class="menu-action" @click="handleClick('add-before')">Add before</div>
-      <div class="menu-action" @click="handleClick('add-children')">Add children</div>
-      <div class="menu-action" @click="handleClick('add-after')">Add after</div>
+  <Menu as="div">
+    <MenuButton>
+      <a-button
+        ><span class="inline-flex w-full justify-center gap-x-1.5">
+          Actions<arrow-down-icon class="fill-zinc-900 relative top-[-2px]" /></span
+      ></a-button>
+    </MenuButton>
+    <MenuItems as="div" class="relative">
       <div
-        :class="`menu-action ${task.canBeFinished() ? '' : 'menu-action-disabled'}`"
-        v-if="!task.finished"
-        type="primary"
-        @click="handleClick('finish')"
+        class="absolute z-10 mt-2 left-5 w-56 origin-top-right rounded-md bg-white border border-zinc-400 shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none flex flex-col overflow-hidden"
       >
-        Finish
+        <MenuItem
+          ><span
+            class="px-4 py-2 text-base hover:bg-zinc-900/90 hover:text-white"
+            @click="handleClick('add-before')"
+            >Add Before</span
+          ></MenuItem
+        >
+        <MenuItem
+          ><span
+            class="px-4 py-2 text-base hover:bg-zinc-900/90 hover:text-white"
+            @click="handleClick('add-children')"
+            >Add Child</span
+          ></MenuItem
+        >
+        <MenuItem
+          ><span
+            class="px-4 py-2 text-base hover:bg-zinc-900/90 hover:text-white"
+            @click="handleClick('add-after')"
+            >Add After</span
+          ></MenuItem
+        >
+        <MenuItem
+          :class="{ 'menu-action-disabled': task.canBeFinished() }"
+          v-if="!task.finished"
+          type="primary"
+        >
+          <span
+            class="px-4 py-2 text-base hover:bg-zinc-900/90 hover:text-white"
+            @click="handleClick('finish')"
+            >Finish</span
+          >
+        </MenuItem>
+        <MenuItem v-if="task.finished"
+          ><span
+            class="px-4 py-2 text-base hover:bg-zinc-900/90 hover:text-white"
+            @click="handleClick('unfinished')"
+            >Unfinished</span
+          ></MenuItem
+        >
+        <MenuItem
+          ><span
+            class="px-4 py-2 text-base text-red-500 hover:bg-red-600 hover:text-white"
+            @click="handleClick('delete')"
+            >Delete</span
+          ></MenuItem
+        >
       </div>
-      <div class="menu-action" v-if="task.finished" @click="handleClick('unfinished')">
-        Unfinished
-      </div>
-      <div class="menu-action" type="error" @click="handleClick('delete')">Delete</div>
-    </n-space>
-  </n-popover>
+    </MenuItems>
+  </Menu>
 </template>
 
-<style scoped>
-.menu-action {
-  padding: 0.3rem 1rem;
-  user-select: none;
-  text-align: center;
-}
-
-.menu-action-disabled {
-  color: #cccccc45 !important;
-}
-
-.menu-action-disabled:hover {
-  cursor: initial !important;
-  color: #cccccc45 !important;
-  background-color: initial !important;
-}
-
-.menu-action:hover {
-  cursor: pointer;
-  background-color: rgb(127, 231, 196, 0.5);
-}
-</style>
-
-<style>
-.actions-menu {
-  padding: 0 !important;
-}
-</style>
+<style scoped></style>
